@@ -1,0 +1,25 @@
+{
+	"apps": {
+		"http": {
+			"servers": {
+				"reverse-proxy-server": {
+					"listen": [":2015"],
+					"routes": [
+						{
+							"handle": [{
+								"@id": "upstream-handler",
+								"handler": "reverse_proxy",
+								"load_balancing": {
+									"selection_policy": { 
+										"policy": "random" 
+									}
+								},
+								"upstreams": []
+							}]
+						}
+					]
+				}
+			}
+		}
+	}
+}
