@@ -24,6 +24,7 @@ func EntrypointHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Fprintf(w, "%+v", node)
+	// add to sqlite db
 }
 
 func StartEntrypointServer() {
