@@ -1,0 +1,28 @@
+---
+config:
+  theme: redux-color
+  look: neo
+---
+sequenceDiagram
+    box WorkerNode
+      participant WorkerNode
+    end
+    box MasterNode
+      participant MasterNode
+      participant KVStore
+    end
+
+    loop While NumRetries < MaxRetries
+      WorkerNode->>MasterNode: Request to join cluster at /join endpoint
+
+      alt If WorkerNode Successfully hits /join and securely connects to Master
+        MasterNode->>KVStore: Appends new node
+        MasterNode-->>WorkerNode: Gets container config info and returns it to worker
+      
+      else If WorkerNode is unable to Connect to MasterNode
+        MasterNode->>MasterNode: Increment NumRetries + Wait via Exponential Backoff
+
+      end
+    end 
+
+    Note over WorkerNode: Returns failure to connect if over MaxRetries

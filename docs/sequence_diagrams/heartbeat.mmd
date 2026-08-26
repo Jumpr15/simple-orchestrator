@@ -1,0 +1,35 @@
+---
+config:
+  theme: redux-color
+  look: neo
+---
+sequenceDiagram
+    box WorkerNode
+      participant ContainerDaemonAPI
+      participant WorkerNode
+    end
+    box MasterNode
+      participant MasterNode
+      participant KVStore
+      participant LoadBalancer
+    end
+
+loop Every second
+     loop Loop FOR ALL workerNodes
+          loop While NumRetries < MaxRetries
+               MasterNode->>WorkerNode: Queries state
+
+               alt QueryState == CurrentState
+                    WorkerNode-->>MasterNode: Returns ACK 
+
+               else QueryState != CurrentState
+                    WorkerNode->>ContainerDaemonAPI: Indicates to container daemon API to startup/delete container
+                    WorkerNode-->>MasterNode: Returns CurrentState (Or maybe only changes?)
+                    MasterNode-->>KVStore: Synchronise stored state with current state
+                    MasterNode-->>LoadBalancer: Updates LB to cover available endpoints
+               end
+          end
+          MasterNode-->>KVStore: Remove node from cluster endpoints
+          MasterNode-->>LoadBalancer: Remove all endpoints from that node from available cluster endpoints
+     end
+end

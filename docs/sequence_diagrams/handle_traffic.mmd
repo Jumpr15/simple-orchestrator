@@ -1,0 +1,17 @@
+---
+config:
+  theme: redux-color
+  look: neo
+---
+sequenceDiagram
+     participant Client
+     box MasterNode
+          participant LoadBalancer
+     end
+     box WorkerNode
+          participant ContainerGroup
+     end
+
+    Client->>LoadBalancer: External traffic directed at lb 
+    LoadBalancer->>ContainerGroup: LB Spreads traffic according to set lb algo to cluster endpoints
+    ContainerGroup-->>Client: Returns result back to client
