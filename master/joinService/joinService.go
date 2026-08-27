@@ -1,4 +1,4 @@
-package entrypoint
+package joinService
 
 import (
 	"net"
@@ -7,30 +7,31 @@ import (
 	"fmt"
 )
 
-type NodeConfig struct {
+type NodeAddrConfig struct {
 	Address string
 	Port string
 }
 
+// http handler for onboarding new nodes into cluster
 func EntrypointHandler(w http.ResponseWriter, r *http.Request) {
 	address, port, err := net.SplitHostPort(r.RemoteAddr)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	node := NodeConfig{
+	node := NodeAddrConfig{
 		Address: address,
 		Port: port,
 	}
 
 	fmt.Fprintf(w, "%+v", node)
-	// add to sqlite db
+	// append node to kv store
 }
 
 func StartEntrypointServer() {
 	log.Printf("Starting entrypoint server...")
 
-	http.HandleFunc("/entrypoint", EntrypointHandler)
+	http.HandleFunc("/join", EntrypointHandler)
 
 	http.ListenAndServe(":8090", nil)
 }
