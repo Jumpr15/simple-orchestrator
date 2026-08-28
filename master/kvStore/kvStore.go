@@ -11,26 +11,26 @@ import (
 // map-based data store with sync mutex for concurrency protection
 type KVStore struct {
 	sync.Mutex
-	store map[string]string // maybe changed later for flexibility
+	store map[string]any // maybe changed later for flexibility
 }
 
 func New() (*KVStore) {
-	kv := KVStore{store: map[string]string{}}
+	kv := KVStore{store: map[string]any{}}
 	return &kv
 }
 
-func (kv *KVStore) Get(key string) (string, bool) { // value string, found bool
+func (kv *KVStore) Get(key string) (any, bool) { // value string, found bool
 	kv.Lock()
 	defer kv.Unlock()
 
-	val := kv.store[key]
-	if val == "" {
-		return val, false
+	val, ok := kv.store[key]
+	if ok {
+		return val, true
 	}
-	return val, true
+	return val, false
 }
 
-func (kv *KVStore) Set(key string, value string) {
+func (kv *KVStore) Set(key string, value any) {
 	kv.Lock()
 	defer kv.Unlock()
 
