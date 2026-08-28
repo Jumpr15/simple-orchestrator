@@ -5,29 +5,43 @@ package kvStore
 
 import (
 	"sync"
-	"errors"
+	// "errors"
 )
 
 // map-based data store with sync mutex for concurrency protection
 type KVStore struct {
 	sync.Mutex
-	map[string]string // maybe changed later for flexibility
+	store map[string]string // maybe changed later for flexibility
 }
 
-func New(...) (*KVStore, error) {
-
+func New() (*KVStore) {
+	kv := KVStore{store: map[string]string{}}
+	return &kv
 }
 
-func (kv *KVStore) Get(key string) (string, error) {
+func (kv *KVStore) Get(key string) (string, bool) { // value string, found bool
+	kv.Lock()
+	defer kv.Unlock()
 
+	val := kv.store[key]
+	if val == "" {
+		return val, false
+	}
+	return val, true
 }
 
-func (kv *KVStore) Set(key string, value string) error {
+func (kv *KVStore) Set(key string, value string) {
+	kv.Lock()
+	defer kv.Unlock()
 
+	kv.store[key] = value
 }
 
-func (kv *KVStore) Del(key string) error {
+func (kv *KVStore) Del(key string) {
+	kv.Lock()
+	defer kv.Unlock()
 
+	delete(kv.store, key)
 }
 
 // maybe inc?

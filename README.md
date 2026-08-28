@@ -1,5 +1,12 @@
 # **Documentation**
 
+## **Todos**
+- [ ] Create cluster join http endpoint and handle http errors
+- [ ] Create a kv-store and implement access patterns
+- [ ] Initialize caddy instance and implement dynamic endpoint updating
+- [ ] Create worker cluster join job 
+- [ ] Create containerd daemon API method wrappers
+
 ## **Design Philosophy**
 - The program should be simple to run, and the components of the system and their purposes should be simple to understand
 - The program should be opinionated in order to ensure simplicity while also providing a usable service (inflexible and minimal extensibility)
