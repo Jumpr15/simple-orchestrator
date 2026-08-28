@@ -1,6 +1,7 @@
 package joinService
 
 import (
+	"simple-orchestrator/master/kvStore"
 	"net"
 	"net/http"
 	"log"
@@ -28,10 +29,11 @@ func EntrypointHandler(w http.ResponseWriter, r *http.Request) {
 	// append node to kv store
 }
 
-func StartEntrypointServer() {
-	log.Printf("Starting entrypoint server...")
+func StartJoinService(kv *kvStore.KVStore) {
+	log.Printf("Starting join service...")
 
 	http.HandleFunc("/join", EntrypointHandler)
 
 	http.ListenAndServe(":8090", nil)
+
 }

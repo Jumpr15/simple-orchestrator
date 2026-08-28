@@ -3,7 +3,13 @@ package main
 import (
 	"simple-orchestrator/master/joinService"  
 	"simple-orchestrator/master/kvStore"
-	"simple-orchestrator/master/healthService"
+	// "simple-orchestrator/master/healthService"
+
+	"context"
+	"os/signal"
+	"syscall"
+
+	"fmt"
 )
 
 func main() {
@@ -15,7 +21,12 @@ func main() {
 	// should create cluster join endpoint (create a password asw to validate joining machines) => in seperate go routine
 	go joinService.StartJoinService(kv) // takes in kv store
 
-	go healthservice.StartHealthService() // takes in kv store, lb
-	
-	select {} // check for sigint
+	// go healthservice.StartHealthService() // takes in kv store, lb
+
+	ctx, stop := signal.NotifyContext(
+		context.Background(), syscall.SIGINT, syscall.SIGTERM,
+	)
+	defer stop()
+	<-ctx.Done()
+	fmt.Println("Exiting")
 }
