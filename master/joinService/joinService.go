@@ -4,9 +4,14 @@ import (
 	"simple-orchestrator/master/kvStore"
 	"net"
 	"net/http"
+	"uuid"
 	"log"
 	"fmt"
 )
+
+type EntrypointServer struct {
+	kv *kvStore.KVStore
+}
 
 type NodeAddrConfig struct {
 	Address string
@@ -14,7 +19,7 @@ type NodeAddrConfig struct {
 }
 
 // http handler for onboarding new nodes into cluster
-func EntrypointHandler(w http.ResponseWriter, r *http.Request) {
+func (es *EntrypointServer) EntrypointHandler(w http.ResponseWriter, r *http.Request) {
 	address, port, err := net.SplitHostPort(r.RemoteAddr)
 	if err != nil {
 		log.Fatal(err)
@@ -25,14 +30,22 @@ func EntrypointHandler(w http.ResponseWriter, r *http.Request) {
 		Port: port,
 	}
 
+	id := uuid.New()
+	id_string := id.String()
+	es.kv.Set(id_string, node)
+
+
+	val, found := es.kv.Get(id_string)
 	fmt.Fprintf(w, "%+v", node)
-	// append node to kv store
+	fmt.Println(val, found, id_string)
 }
 
 func StartJoinService(kv *kvStore.KVStore) {
 	log.Printf("Starting join service...")
 
-	http.HandleFunc("/join", EntrypointHandler)
+	es := EntrypointServer{kv}
+
+	http.HandleFunc("/join", es.EntrypointHandler)
 
 	http.ListenAndServe(":8090", nil)
 

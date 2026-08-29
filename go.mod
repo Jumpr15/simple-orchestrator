@@ -1,6 +1,6 @@
 module simple-orchestrator
 
-go 1.25.7
+go 1.27.0
 
 require (
 	github.com/cespare/xxhash/v2 v2.1.1 // indirect

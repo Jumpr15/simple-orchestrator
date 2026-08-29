@@ -15,11 +15,11 @@ import (
 func main() {
 	// should init kv store + lb
 
-	kv := kvStore.New() // init with config details
+	node_kv := kvStore.New() // init with config details
 	// lb := ... // (implement caddy init)
 
 	// should create cluster join endpoint (create a password asw to validate joining machines) => in seperate go routine
-	go joinService.StartJoinService(kv) // takes in kv store
+	go joinService.StartJoinService(node_kv) // takes in kv store
 
 	// go healthservice.StartHealthService() // takes in kv store, lb
 
