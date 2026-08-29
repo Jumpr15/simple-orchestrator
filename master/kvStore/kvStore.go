@@ -5,7 +5,6 @@ package kvStore
 
 import (
 	"sync"
-	// "errors"
 )
 
 // map-based data store with sync mutex for concurrency protection
@@ -28,6 +27,13 @@ func (kv *KVStore) Get(key string) (any, bool) { // value string, found bool
 		return val, true
 	}
 	return val, false
+}
+
+func (kv *KVStore) GetAll() map[string]any {
+	kv.Lock()
+	defer kv.Unlock()
+
+	return kv.store
 }
 
 func (kv *KVStore) Set(key string, value any) {

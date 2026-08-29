@@ -3,7 +3,7 @@ package main
 import (
 	"simple-orchestrator/master/joinService"  
 	"simple-orchestrator/master/kvStore"
-	// "simple-orchestrator/master/healthService"
+	"simple-orchestrator/master/healthService"
 
 	"context"
 	"os/signal"
@@ -15,13 +15,13 @@ import (
 func main() {
 	// should init kv store + lb
 
-	node_kv := kvStore.New() // init with config details
+	nodeKv := kvStore.New() // init with config details
 	// lb := ... // (implement caddy init)
 
 	// should create cluster join endpoint (create a password asw to validate joining machines) => in seperate go routine
-	go joinService.StartJoinService(node_kv) // takes in kv store
+	go joinService.StartJoinService(nodeKv) // takes in kv store
 
-	// go healthservice.StartHealthService() // takes in kv store, lb
+	go healthService.StartHealthService(nodeKv) // takes in kv store, lb / eventually consistent health checks
 
 	ctx, stop := signal.NotifyContext(
 		context.Background(), syscall.SIGINT, syscall.SIGTERM,
