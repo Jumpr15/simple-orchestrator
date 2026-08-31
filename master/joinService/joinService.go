@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"uuid"
 	"log"
-	"fmt"
+	// "fmt"
 )
 
 type EntrypointServer struct {
@@ -35,9 +35,9 @@ func (es *EntrypointServer) EntrypointHandler(w http.ResponseWriter, r *http.Req
 	es.kv.Set(id_string, node)
 
 
-	val, found := es.kv.Get(id_string)
-	fmt.Fprintf(w, "%+v", node)
-	fmt.Println(val, found, id_string)
+	// val, found := es.kv.Get(id_string)
+	// fmt.Fprintf(w, "%+v", node)
+	// fmt.Println(val, found, id_string)
 }
 
 func StartJoinService(kv *kvStore.KVStore) {
