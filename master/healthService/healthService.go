@@ -13,7 +13,7 @@ import (
 func SendHealthcheck() {
 	client, err := rpc.Dial("tcp", "localhost:16767")
 	if err != nil {
-		log.Println("Error sending healthcheck to worker")
+		log.Println("Error sending healthcheck to worker\n")
 		return
 	}
 	defer client.Close()
@@ -23,19 +23,19 @@ func SendHealthcheck() {
 
 	err = client.Call("HeartbeatServer.SendHealthcheck", args, &response)
 	if err != nil {
-		log.Println("Error calling heartbeat server rpc method")
+		log.Println("Error calling heartbeat server rpc method\n")
 	}
 
-	fmt.Println("result is:", response)
+	fmt.Println("result is:", response, "\n")
 	return
 }
 
-func StartHealthService(kv *kvStore.KVStore)  {
+func StartHealthService(kv *kvStore.KvStore)  {
 	kvPairs := kv.GetAll() // type map[stirng]any
 	for {
-		fmt.Printf("%#v\n", kvPairs)
+		fmt.Printf("%#v\n\n", kvPairs)
 		for key, value := range kvPairs {
-			fmt.Println(key, value)
+			fmt.Println(key, value, "\n\n")
 			SendHealthcheck()
 			// send rpc heartbeat requests to endpoints
 			// handle 

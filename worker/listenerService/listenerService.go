@@ -14,11 +14,11 @@ func StartListenerServer() {
 	
 	listener, err := net.Listen("tcp", ":16767")
 	if err != nil {
-		log.Fatal("Listener RPC server failed")
+		log.Fatal("Listener RPC server failed\n")
 	}
 	defer listener.Close()
-
-	log.Println("Listener server starting...")
+	
+	log.Println("Listener server starting...\n")
 	rpc.Accept(listener)
 }
 

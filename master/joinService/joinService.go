@@ -2,6 +2,7 @@ package joinService
 
 import (
 	"simple-orchestrator/master/kvStore"
+	"simple-orchestrator/common/heartbeat"
 	"net"
 	"net/http"
 	"uuid"
@@ -10,12 +11,7 @@ import (
 )
 
 type EntrypointServer struct {
-	kv *kvStore.KVStore
-}
-
-type NodeAddrConfig struct {
-	Address string
-	Port string
+	kv *kvStore.KvStore
 }
 
 // http handler for onboarding new nodes into cluster
@@ -25,13 +21,18 @@ func (es *EntrypointServer) EntrypointHandler(w http.ResponseWriter, r *http.Req
 		log.Fatal(err)
 	}
 
-	node := NodeAddrConfig{
-		Address: address,
-		Port: port,
-	}
-
 	id := uuid.New()
 	id_string := id.String()
+
+	node := heartbeat.NodeAddrConfig{
+		Address: address,
+		Port: port,
+		Id: id_string,
+	}
+
+	// call scheduler interface and allocate based on alloc-algorithm 
+	
+
 	es.kv.Set(id_string, node)
 
 
@@ -40,8 +41,8 @@ func (es *EntrypointServer) EntrypointHandler(w http.ResponseWriter, r *http.Req
 	// fmt.Println(val, found, id_string)
 }
 
-func StartJoinService(kv *kvStore.KVStore) {
-	log.Printf("Starting join service...")
+func StartJoinService(kv *kvStore.KvStore) {
+	log.Printf("Starting join service...\n\n")
 
 	es := EntrypointServer{kv}
 
