@@ -3,14 +3,18 @@ package listenerService
 import (
 	"simple-orchestrator/common/heartbeat"
 
+	"github.com/dgraph-io/ristretto/v2"
+
 	"log"
 	"net"
 	"net/rpc"
 )
 
-func StartListenerServer() {
-	server := new(heartbeat.HeartbeatServer)
-	rpc.Register(server)
+func StartListenerServer(kv *ristretto.Cache[string, any]) {
+	server := heartbeat.HeartbeatServer{
+		KvStore: kv,
+	}
+	rpc.Register(&server)
 	
 	listener, err := net.Listen("tcp", ":16767")
 	if err != nil {

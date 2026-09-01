@@ -17,7 +17,7 @@ import (
 func main() {
 	// should init kv store + lb
 
-	nodeKv := kvStore.New() // init with config details
+	nodeKv := kvStore.New() // init with config details // change to cluster kv?
 	sch := scheduler.New(nodeKv)
 	// lb := ... // (implement caddy init)
 
