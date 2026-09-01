@@ -1,7 +1,7 @@
 package healthService
 
 import (
-	"simple-orchestrator/common/heartbeat"
+	hbType "simple-orchestrator/common/types/heartbeatTypes"
 	"simple-orchestrator/master/kvStore"
 
 	"net/rpc"
@@ -10,16 +10,17 @@ import (
 	"time"
 )
 
-func SendHealthcheck() {
-	client, err := rpc.Dial("tcp", "localhost:16767")
+func SendHealthcheck(ipv6_addr string) {
+	fmt_addr := fmt.Sprintf("[%s]:16767", ipv6_addr)
+	client, err := rpc.Dial("tcp", fmt_addr) // for handling ipv6 addrs
 	if err != nil {
 		log.Println("Error sending healthcheck to worker\n")
 		return
 	}
 	defer client.Close()
 
-	args := heartbeat.Args{}
-	var response heartbeat.Response 
+	args := hbType.Args{}
+	var response hbType.Response 
 
 	err = client.Call("HeartbeatServer.SendHealthcheck", args, &response)
 	if err != nil {
@@ -31,12 +32,12 @@ func SendHealthcheck() {
 }
 
 func StartHealthService(kv *kvStore.KvStore)  {
-	kvPairs := kv.GetAll() // type map[stirng]any
+	kvPairs := kv.GetAll() 
 	for {
 		fmt.Printf("%#v\n\n", kvPairs)
-		for key, value := range kvPairs {
-			fmt.Println(key, value, "\n\n")
-			SendHealthcheck()
+		for _, node := range kvPairs {
+			// fmt.Println(key, value, "\n\n")
+			SendHealthcheck(node.Address)
 			// send rpc heartbeat requests to endpoints
 			// handle 
 			// if successful => add endpoint to lb cluster endpoint list

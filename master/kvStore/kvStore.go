@@ -4,21 +4,23 @@ package kvStore
 // specific cache inits can be manually configured
 
 import (
+	addrType "simple-orchestrator/common/types/addressTypes"
+
 	"sync"
 )
 
 // map-based data store with sync mutex for concurrency protection
 type KvStore struct {
 	sync.Mutex
-	store map[string]any // maybe changed later for flexibility
+	store map[string]addrType.NodeAddrConfig // maybe changed later for flexibility
 }
 
 func New() (*KvStore) {
-	kv := KvStore{store: map[string]any{}}
+	kv := KvStore{store: map[string]addrType.NodeAddrConfig{}}
 	return &kv
 }
 
-func (kv *KvStore) Get(key string) (any, bool) { // value string, found bool
+func (kv *KvStore) Get(key string) (addrType.NodeAddrConfig, bool) { // value string, found bool
 	kv.Lock()
 	defer kv.Unlock()
 
@@ -29,14 +31,14 @@ func (kv *KvStore) Get(key string) (any, bool) { // value string, found bool
 	return val, false
 }
 
-func (kv *KvStore) GetAll() map[string]any {
+func (kv *KvStore) GetAll() map[string]addrType.NodeAddrConfig {
 	kv.Lock()
 	defer kv.Unlock()
 
 	return kv.store
 }
 
-func (kv *KvStore) Set(key string, value any) {
+func (kv *KvStore) Set(key string, value addrType.NodeAddrConfig) {
 	kv.Lock()
 	defer kv.Unlock()
 

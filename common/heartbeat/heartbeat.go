@@ -1,44 +1,20 @@
 package heartbeat
 
-import ()
-
-type ContainerConfig struct {
-
-}
-
-type ContainerState struct {
-	ID string
-	State string // enum
-	
-}
-
-type ContainerList []ContainerState
-
-type NodeAddrConfig struct {
-	Id string
-	Address string
-	Port string
-}
-
-type Args struct {
-	NodeAddrConfig
-	ContainerConfig
-
-	DesiredNumContainers int // Needed? (Running or Total )
-}
-
-type Response struct {
-	NodeAddrConfig
-	ContainerList 
-
-	CurrentNumContainers int // Needed?
-}
+import (
+	hbType "simple-orchestrator/common/types/heartbeatTypes"
+	ctrType "simple-orchestrator/common/types/containerTypes"
+	addrType "simple-orchestrator/common/types/addressTypes"
+)
 
 type HeartbeatServer struct {
 
 }
 
-func (hb *HeartbeatServer) SendHealthcheck(args *Args, res *Response) error {
-	res = &Response{}
+func (hbs *HeartbeatServer) SendHealthcheck(args *hbType.Args, res *hbType.Response) error {
+	*res = hbType.Response{
+		NodeAddrConfig: args.NodeAddrConfig,
+		ContainerList: ctrType.ContainerList {},
+		CurrentNumContainers: 2,
+	}
 	return nil
 }

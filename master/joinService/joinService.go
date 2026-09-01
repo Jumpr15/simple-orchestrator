@@ -1,8 +1,9 @@
 package joinService
 
 import (
+	addrType "simple-orchestrator/common/types/addressTypes"
 	"simple-orchestrator/master/kvStore"
-	"simple-orchestrator/common/heartbeat"
+	
 	"net"
 	"net/http"
 	"uuid"
@@ -24,7 +25,7 @@ func (es *EntrypointServer) EntrypointHandler(w http.ResponseWriter, r *http.Req
 	id := uuid.New()
 	id_string := id.String()
 
-	node := heartbeat.NodeAddrConfig{
+	node := addrType.NodeAddrConfig{
 		Address: address,
 		Port: port,
 		Id: id_string,

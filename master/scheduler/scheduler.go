@@ -18,7 +18,10 @@ func New(kv *kvStore.KvStore) *Scheduler {
 	return &sch
 }
 
-func (sch *Scheduler) ScheduleNode
+// basic scheduler, tells nodes to spin up 2 instances of a container
+func (sch *Scheduler) ScheduleNode() { 
+	
+}
 
 func (sch *Scheduler) GetState() {
 	log.Println("Scheduler up and running!")

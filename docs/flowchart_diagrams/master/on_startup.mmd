@@ -1,0 +1,21 @@
+---
+title: Master Startup Flowchart
+---
+
+flowchart 
+     m[Process starts] --> kv[Initialize scheduler, kv store, load balancer]
+     kv --> proc[
+     Execute goroutines for: 
+     - healthService
+     - joinService
+     ]
+     proc --> healthService
+     proc --> fin[Listening for SIGINT/SIGTERM syscall]
+     proc --> joinService
+
+     fin --> e[Process finishes]
+     
+
+     healthService --> h1[Queries kv store for worker nodes] 
+     
+     h1 --> h2[Creates RPC client and calls HeartbeatServer.SendHealthcheck]
