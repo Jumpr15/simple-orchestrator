@@ -1,6 +1,7 @@
 package scheduler
 
 import (
+	ctrType "simple-orchestrator/common/types/containerTypes"
 	"simple-orchestrator/master/kvStore"
 
 	"log"
@@ -19,8 +20,14 @@ func New(kv *kvStore.KvStore) *Scheduler {
 }
 
 // basic scheduler, tells nodes to spin up 2 instances of a container
-func (sch *Scheduler) ScheduleNode() { 
-	
+func (sch *Scheduler) ScheduleNode() ctrType.ContainerConfig { 
+	// replace with call to ctr cfg constructor later 
+	//
+	cfg := ctrType.ContainerConfig{
+		DesiredNumContainers: 2,
+	}
+	//
+	return cfg
 }
 
 func (sch *Scheduler) GetState() {

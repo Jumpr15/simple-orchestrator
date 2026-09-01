@@ -1,7 +1,7 @@
 package containerTypes 
 
 type ContainerConfig struct {
-	
+	DesiredNumContainers int
 }
 
 type ContainerState struct {

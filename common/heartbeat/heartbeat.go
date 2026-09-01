@@ -3,7 +3,7 @@ package heartbeat
 import (
 	hbType "simple-orchestrator/common/types/heartbeatTypes"
 	ctrType "simple-orchestrator/common/types/containerTypes"
-	addrType "simple-orchestrator/common/types/addressTypes"
+	// addrType "simple-orchestrator/common/types/addressTypes"
 )
 
 type HeartbeatServer struct {

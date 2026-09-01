@@ -8,8 +8,6 @@ import (
 type Args struct {
 	addrType.NodeAddrConfig
 	ctrType.ContainerConfig
-
-	DesiredNumContainers int // Needed? (Running or Total )
 }
 
 type Response struct {
