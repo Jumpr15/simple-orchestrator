@@ -5,6 +5,7 @@ import (
 	"simple-orchestrator/master/kvStore"
 	
 	"net"
+	// "net/netip"
 	"net/http"
 	"uuid"
 	"log"
@@ -17,16 +18,20 @@ type EntrypointServer struct {
 
 // http handler for onboarding new nodes into cluster
 func (es *EntrypointServer) EntrypointHandler(w http.ResponseWriter, r *http.Request) {
-	address, port, err := net.SplitHostPort(r.RemoteAddr)
+	addr, port, err := net.SplitHostPort(r.RemoteAddr)
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// addr, err := netip.ParseAddr(host)
+
+	// full_addr := addr.StringExpanded()
 
 	id := uuid.New()
 	id_string := id.String()
 
 	node := addrType.NodeAddrConfig{
-		Address: address,
+		Address: addr,
 		Port: port,
 		Id: id_string,
 	}

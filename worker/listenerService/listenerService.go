@@ -12,8 +12,9 @@ import (
 
 func StartListenerServer(kv *ristretto.Cache[string, any]) {
 	server := heartbeat.HeartbeatServer{
-		KvStore: kv,
+		Kv: kv,
 	}
+
 	rpc.Register(&server)
 	
 	listener, err := net.Listen("tcp", ":16767")

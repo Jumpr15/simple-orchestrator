@@ -6,17 +6,47 @@ import (
 	// addrType "simple-orchestrator/common/types/addressTypes"
 
 	"github.com/dgraph-io/ristretto/v2"
+
+	"log"
 )
 
 type HeartbeatServer struct {
-	KvStore *ristretto.Cache[string, any] 
+	Kv *ristretto.Cache[string, any] 
 }
 
 func (hbs *HeartbeatServer) SendHealthcheck(args *hbType.Args, res *hbType.Response) error {
+	var currentNumContainers int
+	currentNumContainersInterface, found := hbs.Kv.Get("currentNumContainers")
+	if !found {
+		log.Println("currentNumContainers not set")
+		hbs.Kv.Set("currentNumContainers", 0, 1) 
+		hbs.Kv.Wait()
+		
+		currentNumContainers = 0
+	} else {
+		var ok bool
+		currentNumContainers, ok = currentNumContainersInterface.(int)
+		if !ok {
+			log.Fatal("currentNumContainers is not a int?")
+		}
+	}
+
+	desiredNumContainers := args.DesiredNumContainers
+
+	if currentNumContainers > desiredNumContainers {
+		log.Printf("Too many containers, destroying containers")
+	}
+	if currentNumContainers < desiredNumContainers {
+		log.Printf("Not enough containers, spinning up new containers")
+	}
+	if currentNumContainers == desiredNumContainers {
+		log.Printf("Just enough...for now, doing nothing")
+	}
+
 	*res = hbType.Response{
 		NodeAddrConfig: args.NodeAddrConfig,
 		ContainerList: ctrType.ContainerList {},
-		CurrentNumContainers: 2, // query from kv
+		CurrentNumContainers: currentNumContainers, // query from kv
 	}
 	return nil
 }

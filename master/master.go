@@ -19,7 +19,7 @@ func main() {
 
 	nodeKv := kvStore.New() // init with config details // change to cluster kv?
 	sch := scheduler.New(nodeKv)
-	// lb := ... // (implement caddy init)
+	loadBalancer := 
 
 	go healthService.StartHealthService(nodeKv, sch) // takes in kv store, lb / eventually consistent health checks
 
