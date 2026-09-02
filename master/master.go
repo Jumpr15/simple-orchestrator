@@ -6,6 +6,7 @@ import (
 
 	"simple-orchestrator/master/scheduler"
 	"simple-orchestrator/master/kvStore"
+	"simple-orchestrator/master/loadBalancer"
 
 	"context"
 	"os/signal"
@@ -19,7 +20,7 @@ func main() {
 
 	nodeKv := kvStore.New() // init with config details // change to cluster kv?
 	sch := scheduler.New(nodeKv)
-	loadBalancer := 
+	lb := loadBalancer.New("127.0.0.1", "2019") // takes in address and port of caddy admin api
 
 	go healthService.StartHealthService(nodeKv, sch) // takes in kv store, lb / eventually consistent health checks
 

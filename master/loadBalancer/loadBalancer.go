@@ -2,6 +2,7 @@ package loadBalancer
 
 import (
 	addrType "simple-orchestrator/common/types/addressTypes"
+	lbType "simple-orchestrator/common/types/lbConfigTypes"
 
 	"net/http"
 	"io"
@@ -11,12 +12,15 @@ import (
 	"encoding/json"	
 )
 
-type CaddyClient struct {
-	Address string
-	Port string // or int?
+func New(Address string, Port string) *lbType.LBConfigClient {
+	lb := lbType.LBConfigClient{
+		Address: Address,
+		Port: Port,
+	}
+	return &lb
 }
 
-func (c *CaddyClient) GetUpstreamDetails(node addrType.NodeAddrConfig) {
+func (lb *lbType.LBConfigClient) GetUpstreamDetails(node addrType.NodeAddrConfig) {
 	res, err := http.Get(fmt.Sprintf("http://%s:%s/id/%s/", c.Address, c.Port, node.Id))
 	if err != nil {
 		log.Fatal(err)
@@ -29,7 +33,7 @@ func (c *CaddyClient) GetUpstreamDetails(node addrType.NodeAddrConfig) {
 
 // assumes http routes handler has @id: "upstream-handler"]
 // sends json payload of { "dial": address, "@id": id }
-func (c *CaddyClient) Add(node addrType.NodeAddrConfig) { 
+func (lb *lbType.LBConfigClient) Add(node addrType.NodeAddrConfig) { 
 	client := &http.Client{}
 
 	req_body := map[string]string{
@@ -41,7 +45,7 @@ func (c *CaddyClient) Add(node addrType.NodeAddrConfig) {
 		log.Fatal(err)
 	}
 
-	req, err := http.NewReqnodest("POST", fmt.Sprintf("http://%s:%s/id/upstream-handler/upstreams/", c.Address, c.Port), bytes.NewBuffer(json_req))
+	req, err := http.NewRequest("POST", fmt.Sprintf("http://%s:%s/id/upstream-handler/upstreams/", c.Address, c.Port), bytes.NewBuffer(json_req))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -57,10 +61,10 @@ func (c *CaddyClient) Add(node addrType.NodeAddrConfig) {
 	fmt.Printf("%s\n", body)
 }
 
-func (c *CaddyClient) Delete(node addrType.NodeAddrConfig) {
+func (lb *lbType.LBConfigClient) Delete(node addrType.NodeAddrConfig) {
 	client := &http.Client{}
 
-	req, err := http.NewReqnodest("DELETE", fmt.Sprintf("http://%s:%s/id/%s/", c.Address, c.Port, node.Id), nil)
+	req, err := http.NewRequest("DELETE", fmt.Sprintf("http://%s:%s/id/%s/", c.Address, c.Port, node.Id), nil)
 	if err != nil {
 		log.Fatal(err)
 	}
