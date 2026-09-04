@@ -40,7 +40,9 @@ func (hbs *HeartbeatServer) SendHealthcheck(args *hbType.Args, res *hbType.Respo
 	if currentNumContainers < desiredNumContainers {
 		log.Printf("Not enough containers, spinning up new containers")
 		// loop for diff between curr and desired
-		go containerService.CreateAndStartContainer(args.ContainerConfig)
+		for i := 0; i < desiredNumContainers-currentNumContainers; i++ { 
+			go containerService.CreateAndStartContainer(args.ContainerConfig)
+		}
 	}
 	if currentNumContainers == desiredNumContainers {
 		log.Printf("Just enough...for now, doing nothing")
