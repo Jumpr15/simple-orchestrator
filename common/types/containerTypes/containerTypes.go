@@ -3,17 +3,17 @@ package containerTypes
 import (
 	"net/netip"
 
-	// "github.com/moby/moby/api/types/network/v2"
+	"github.com/moby/moby/api/types/network"
 )
 
 type PortConfig struct {
  	AddressString string 
  	HostInt uint16 // represented by int type
  	ExposedInt uint16 // represented by int type
- 	// Protocol network.IPProtocol // represented by string type
+ 	Protocol network.IPProtocol // represented by string type
  	Address netip.Addr
-	// HostPort network.Port
-	// ExposedPort network.Port
+	HostPort network.Port
+	ExposedPort network.Port
 }
 
 type ContainerConfig struct {

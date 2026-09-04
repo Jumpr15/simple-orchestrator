@@ -33,7 +33,7 @@ func (sch *Scheduler) ScheduleNode() ctrType.ContainerConfig {
 			AddressString: "127.0.0.1",
 			HostInt: 80,
 			ExposedInt: 80,
-			// Protocol: "tcp",			
+			Protocol: "tcp",			
 		},
 	}
 	return cfg
