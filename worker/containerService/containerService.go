@@ -2,6 +2,8 @@ package containerService
 
 import (
 	ctrType "simple-orchestrator/common/types/containerTypes"
+	
+	"github.com/dgraph-io/ristretto/v2"
 
 	"log"
 )
@@ -21,6 +23,6 @@ func CreateAndStartContainer(kv *ristretto.Cache[string, any], config ctrType.Co
 	// insert container info into kv
 	kv.Set("currentNumContainers", currentNumContainers+1, 1)
 	// append container to list of containers for node in kv
-	
+
 
 }
