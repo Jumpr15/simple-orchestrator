@@ -4,6 +4,7 @@ import (
 	hbType "simple-orchestrator/common/types/heartbeatTypes"
 	ctrType "simple-orchestrator/common/types/containerTypes"
 	// addrType "simple-orchestrator/common/types/addressTypes"
+	"simple-orchestrator/worker/containerService"
 
 	"github.com/dgraph-io/ristretto/v2"
 
@@ -38,14 +39,16 @@ func (hbs *HeartbeatServer) SendHealthcheck(args *hbType.Args, res *hbType.Respo
 	}
 	if currentNumContainers < desiredNumContainers {
 		log.Printf("Not enough containers, spinning up new containers")
+		// loop for diff between curr and desired
+		go containerService.CreateAndStartContainer(args.ContainerConfig)
 	}
 	if currentNumContainers == desiredNumContainers {
 		log.Printf("Just enough...for now, doing nothing")
 	}
 
 	*res = hbType.Response{
-		NodeAddrConfig: args.NodeAddrConfig,
-		ContainerList: ctrType.ContainerList {},
+		NodeAddrConfig: args.NodeAddrConfig, // resend with sender args
+		ContainerList: ctrType.ContainerList{}, // query from kv
 		CurrentNumContainers: currentNumContainers, // query from kv
 	}
 	return nil

@@ -2,7 +2,6 @@ package main
 
 import (
 	"simple-orchestrator/worker/listenerService"
-	"simple-orchestrator/worker/containerDaemonService"
 
 	"github.com/dgraph-io/ristretto/v2"
 
@@ -23,7 +22,6 @@ func main() {
 
 	connect()
 	// 
-	containerDaemonService.StartDaemonService()
 	listenerService.StartListenerServer(nodeKv)
 }
 

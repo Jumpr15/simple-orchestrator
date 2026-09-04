@@ -6,7 +6,7 @@ import (
 
 	"simple-orchestrator/master/scheduler"
 	"simple-orchestrator/master/kvStore"
-	"simple-orchestrator/master/loadBalancer"
+	// "simple-orchestrator/master/loadBalancer"
 
 	"context"
 	"os/signal"

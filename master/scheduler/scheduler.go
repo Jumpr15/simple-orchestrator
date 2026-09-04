@@ -22,11 +22,20 @@ func New(kv *kvStore.KvStore) *Scheduler {
 // basic scheduler, tells nodes to spin up 2 instances of a container
 func (sch *Scheduler) ScheduleNode() ctrType.ContainerConfig { 
 	// replace with call to ctr cfg constructor later 
-	//
+	
 	cfg := ctrType.ContainerConfig{
-		DesiredNumContainers: 2,
+		DesiredNumContainers: 1,
+		ImageName: "envoy-test-app:latest",
+		EnvMap: map[string]int{
+			"PORT": 80,
+		},
+		PortConfig: ctrType.PortConfig{
+			AddressString: "127.0.0.1",
+			HostInt: 80,
+			ExposedInt: 80,
+			// Protocol: "tcp",			
+		},
 	}
-	//
 	return cfg
 }
 
